@@ -1,6 +1,5 @@
 .card {
   display: block;
-  min-width: 0;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 20px;
@@ -38,19 +37,11 @@
 
 .card dl {
   display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
 }
 
-.card dl > div {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-  min-width: 0;
-}
-
 .card dt {
-  flex-shrink: 0;
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -59,12 +50,10 @@
 }
 
 .card dd {
-  min-width: 0;
-  text-align: right;
+  margin-top: 3px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  font-size: 0.92rem;
-  overflow-wrap: anywhere;
+  font-size: 0.86rem;
 }
 
 .bar {
@@ -120,21 +109,4 @@
 
 .ink .bar span {
   background: var(--ink);
-}
-
-@media (min-width: 520px) {
-  .card dl {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .card dl > div {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 3px;
-  }
-
-  .card dd {
-    text-align: left;
-    font-size: 0.86rem;
-  }
 }

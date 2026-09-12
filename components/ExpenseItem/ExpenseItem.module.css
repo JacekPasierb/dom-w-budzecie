@@ -27,7 +27,7 @@
 .cost {
   font-weight: 700;
   letter-spacing: -0.03em;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
 }
 
 .badges {

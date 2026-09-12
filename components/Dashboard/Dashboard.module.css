@@ -48,11 +48,10 @@
   z-index: 1;
   margin: 10px 0 6px;
   font-family: var(--display);
-  font-size: clamp(1.55rem, 9vw, 3rem);
+  font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 560;
   letter-spacing: -0.04em;
-  line-height: 1.05;
-  overflow-wrap: anywhere;
+  line-height: 1;
 }
 
 .remainHint {

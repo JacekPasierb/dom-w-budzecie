@@ -19,11 +19,10 @@
 
 .panelHead {
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
   gap: 12px;
-  padding: 14px;
+  padding: 16px 16px 14px;
   border-bottom: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.6);
 }
@@ -31,8 +30,7 @@
 .title {
   display: flex;
   align-items: center;
-  gap: 10px;
-  min-width: 0;
+  gap: 12px;
 }
 
 .glyph {
@@ -61,22 +59,19 @@
 
 .panelHead h2 {
   font-family: var(--display);
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 560;
   letter-spacing: -0.03em;
 }
 
 .total {
   text-align: right;
-  margin-left: auto;
-  min-width: 0;
 }
 
 .total strong {
   display: block;
   font-size: 1.05rem;
   letter-spacing: -0.03em;
-  overflow-wrap: anywhere;
 }
 
 .total span {
