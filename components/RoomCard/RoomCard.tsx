@@ -1,0 +1,69 @@
+"use client";
+
+import Link from "next/link";
+import { Icon } from "@/components/Icon/Icon";
+import { ROOM_LABELS } from "@/data/labels";
+import { ROOM_ICONS, ROOM_TONES } from "@/data/roomIcons";
+import type { RoomSummary } from "@/utils/budget";
+import { formatPLN } from "@/utils/currency";
+import styles from "./RoomCard.module.css";
+
+function formatExpenseCount(count: number): string {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (count === 1) return "1 wydatek";
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
+    return `${count} wydatki`;
+  }
+  return `${count} wydatków`;
+}
+
+type RoomCardProps = {
+  summary: RoomSummary;
+};
+
+export function RoomCard({ summary }: RoomCardProps) {
+  const tone = ROOM_TONES[summary.room];
+  const used =
+    summary.predicted > 0
+      ? Math.min(100, Math.round((summary.spent / summary.predicted) * 100))
+      : 0;
+
+  return (
+    <Link
+      href={`/rooms/${summary.room}`}
+      className={`${styles.card} ${styles[tone]}`}
+    >
+      <div className={styles.head}>
+        <span className={styles.icon} aria-hidden="true">
+          <Icon name={ROOM_ICONS[summary.room]} size={20} />
+        </span>
+        <h2>{ROOM_LABELS[summary.room]}</h2>
+      </div>
+      <dl>
+        <div>
+          <dt>Plan</dt>
+          <dd>{formatPLN(summary.predicted)}</dd>
+        </div>
+        <div>
+          <dt>Wydane</dt>
+          <dd>{formatPLN(summary.spent)}</dd>
+        </div>
+        <div>
+          <dt>Zostaje</dt>
+          <dd>{formatPLN(summary.remaining)}</dd>
+        </div>
+      </dl>
+      <div className={styles.bar} aria-hidden="true">
+        <span style={{ width: `${used}%` }} />
+      </div>
+      <p className={styles.meta}>
+        {formatExpenseCount(summary.expenseCount)}
+        {" · "}
+        must: {summary.requiredCount}
+        {" · "}
+        opcje: {summary.optionalCount}
+      </p>
+    </Link>
+  );
+}

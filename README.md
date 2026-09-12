@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Budżet domu
 
-## Getting Started
+Prosta aplikacja do kontroli budżetu wykończenia domu. Dane trzyma **MongoDB**. Nie ma logowania.
 
-First, run the development server:
+## Jak uruchomić
+
+1. Skopiuj zmienne środowiska:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. W `.env.local` wstaw connection string:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+MONGODB_URI=mongodb://127.0.0.1:27017
+MONGODB_DB=dom-budzet
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Albo Atlas:
 
-## Learn More
+```env
+MONGODB_URI=mongodb+srv://USER:HASLO@CLUSTER.mongodb.net
+MONGODB_DB=dom-budzet
+```
 
-To learn more about Next.js, take a look at the following resources:
+3. Uruchom aplikację:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm install
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Otwórz [http://localhost:3000](http://localhost:3000).
 
-## Deploy on Vercel
+Przy pierwszym starcie, jeśli baza jest pusta, aplikacja wstawia plan startowy. Jeśli w przeglądarce były już wydatki, przy pierwszym połączeniu z MongoDB spróbuje je przenieść.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Gdy MongoDB nie działa, aplikacja chwilowo zapisuje w `localStorage` i wraca do bazy przy kolejnym udanym zapisie.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Jak działają dane
+
+- API: `GET` / `PUT` `/api/budget`
+- baza: `dom-budzet`
+- kolekcja: `state`
+- jeden dokument: `_id: "main"` — wydatki + ustawienia
+
+Backup JSON i CSV zostaje w **Ustawieniach**.
+
+Reset w ustawieniach nadpisuje dokument w MongoDB planem startowym.
+
+## Gdzie zmienić początkowy budżet i rezerwę
+
+W aplikacji: zakładka **Ustawienia**.
+
+W kodzie, przed pierwszym zapisem do pustej bazy albo po resecie:
+
+- `data/defaults.ts` — `DEFAULT_TOTAL_BUDGET` i `DEFAULT_RESERVE`
+- `data/initialExpenses.ts` — startowa lista wydatków
+
+## Jak liczony jest budżet
+
+- **Wydane** — suma kosztów ze statusem Kupione lub Zapłacone
+- **Planowane** — suma wydatków jeszcze niekupionych (Planowane, Zamówione, Odłożone)
+- **Przewidywany koszt** — wydane + planowane
+- **Pozostało** — budżet − przewidywany koszt
+- **Bezpiecznie dostępne** — pozostało − rezerwa
+
+Jeśli cena rzeczywista jest pusta, do obliczeń idzie cena planowana. Ilość mnoży cenę.

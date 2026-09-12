@@ -1,0 +1,101 @@
+.board {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.bought {
+  background: #f4f8f4;
+}
+
+.panelHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.glyph {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: var(--clay-soft);
+  color: var(--clay);
+}
+
+.glyphBought {
+  background: var(--moss-soft);
+  color: var(--moss);
+}
+
+.kicker {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+
+.panelHead h2 {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 560;
+  letter-spacing: -0.03em;
+}
+
+.total {
+  text-align: right;
+  margin-left: auto;
+  min-width: 0;
+}
+
+.total strong {
+  display: block;
+  font-size: 1.05rem;
+  letter-spacing: -0.03em;
+  overflow-wrap: anywhere;
+}
+
+.total span {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+.empty {
+  padding: 22px 16px;
+  text-align: center;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+
+@media (min-width: 960px) {
+  .board {
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+}

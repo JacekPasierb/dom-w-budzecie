@@ -1,0 +1,108 @@
+.card {
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 18px 16px;
+  min-height: 132px;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--clay);
+  opacity: 0.85;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.iconWrap {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--clay-soft);
+  color: var(--clay);
+}
+
+.label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+}
+
+.value {
+  font-family: var(--display);
+  font-size: clamp(1.35rem, 5.5vw, 1.8rem);
+  font-weight: 560;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.hint {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.default .value {
+  color: var(--text);
+}
+
+.safe .value {
+  color: var(--safe);
+}
+
+.safe .iconWrap {
+  background: var(--moss-soft);
+  color: var(--moss);
+}
+
+.safe::before {
+  background: var(--moss);
+}
+
+.warning .value {
+  color: var(--warning);
+}
+
+.warning .iconWrap {
+  background: var(--brass-soft);
+  color: var(--brass);
+}
+
+.warning::before {
+  background: var(--brass);
+}
+
+.danger .value {
+  color: var(--danger);
+}
+
+.danger .iconWrap {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.danger::before {
+  background: var(--danger);
+}
+
+@media (min-width: 640px) {
+  .value {
+    font-size: 1.8rem;
+  }
+}

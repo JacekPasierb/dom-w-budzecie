@@ -1,0 +1,89 @@
+.hero {
+  display: grid;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.heroCopy .pageLead {
+  margin-bottom: 18px;
+}
+
+.remain {
+  position: relative;
+  overflow: hidden;
+  padding: 22px 22px 20px;
+  border-radius: 22px;
+  background: #1d1610;
+  color: #f7efe6;
+  box-shadow: var(--shadow);
+}
+
+.remain::after {
+  content: "";
+  position: absolute;
+  right: -18px;
+  bottom: -28px;
+  width: 140px;
+  height: 140px;
+  border: 18px solid rgba(196, 92, 42, 0.22);
+  border-radius: 28px;
+  transform: rotate(18deg);
+}
+
+.remainLabel {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #d7c4b2;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.remainValue {
+  position: relative;
+  z-index: 1;
+  margin: 10px 0 6px;
+  font-family: var(--display);
+  font-size: clamp(1.55rem, 9vw, 3rem);
+  font-weight: 560;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.remainHint {
+  position: relative;
+  z-index: 1;
+  color: #c9b5a3;
+  font-size: 0.9rem;
+}
+
+.remain.safe .remainValue {
+  color: #e8f3ec;
+}
+
+.remain.warning .remainValue {
+  color: #f3dfb5;
+}
+
+.remain.danger .remainValue {
+  color: #f3c7c1;
+}
+
+@media (min-width: 880px) {
+  .hero {
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+    align-items: stretch;
+  }
+
+  .remain {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100%;
+  }
+}

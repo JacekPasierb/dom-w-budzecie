@@ -1,0 +1,59 @@
+.back {
+  margin-bottom: 18px;
+}
+
+.back a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-weight: 650;
+}
+
+.back a:hover {
+  color: var(--text);
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.titleRow .pageTitle {
+  margin-bottom: 0;
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: var(--clay-soft);
+  color: var(--clay);
+}
+
+.counts {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  font-weight: 650;
+}
+
+.counts p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.list {
+  margin-top: 28px;
+}

@@ -1,0 +1,140 @@
+.card {
+  display: block;
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  padding: 18px;
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: #cfc0ae;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+}
+
+.card h2 {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 560;
+  letter-spacing: -0.03em;
+}
+
+.card dl {
+  display: grid;
+  gap: 8px;
+}
+
+.card dl > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+}
+
+.card dt {
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.card dd {
+  min-width: 0;
+  text-align: right;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-size: 0.92rem;
+  overflow-wrap: anywhere;
+}
+
+.bar {
+  height: 6px;
+  margin: 14px 0 10px;
+  border-radius: 999px;
+  background: var(--surface-muted);
+  overflow: hidden;
+}
+
+.bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.clay .icon {
+  background: var(--clay-soft);
+  color: var(--clay);
+}
+
+.clay .bar span {
+  background: var(--clay);
+}
+
+.moss .icon {
+  background: var(--moss-soft);
+  color: var(--moss);
+}
+
+.moss .bar span {
+  background: var(--moss);
+}
+
+.brass .icon {
+  background: var(--brass-soft);
+  color: var(--brass);
+}
+
+.brass .bar span {
+  background: var(--brass);
+}
+
+.ink .icon {
+  background: #ece4db;
+  color: var(--ink);
+}
+
+.ink .bar span {
+  background: var(--ink);
+}
+
+@media (min-width: 520px) {
+  .card dl {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .card dl > div {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+  }
+
+  .card dd {
+    text-align: left;
+    font-size: 0.86rem;
+  }
+}

@@ -1,0 +1,94 @@
+.wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 18px 16px;
+  margin: 0 0 18px;
+}
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.kicker {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.amount {
+  font-family: var(--display);
+  font-size: clamp(1rem, 4.2vw, 1.2rem);
+  font-weight: 560;
+  letter-spacing: -0.03em;
+  overflow-wrap: anywhere;
+}
+
+.amount span {
+  color: var(--text-muted);
+  font-weight: 500;
+  font-family: var(--font);
+  font-size: 0.92rem;
+}
+
+.state {
+  font-size: 0.88rem;
+  font-weight: 700;
+  align-self: end;
+}
+
+.safe {
+  color: var(--safe);
+}
+
+.near {
+  color: var(--near);
+}
+
+.over {
+  color: var(--over);
+}
+
+.track {
+  position: relative;
+  height: 14px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 9.6%,
+      rgba(29, 22, 16, 0.08) 9.6%,
+      rgba(29, 22, 16, 0.08) 10%
+    ),
+    var(--surface-muted);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.fill {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.35s ease;
+}
+
+.fill.safe {
+  background: linear-gradient(90deg, #4c7a5c, var(--moss));
+}
+
+.fill.near {
+  background: linear-gradient(90deg, #d2a24a, var(--brass));
+}
+
+.fill.over {
+  background: linear-gradient(90deg, #d46a55, var(--over));
+}
