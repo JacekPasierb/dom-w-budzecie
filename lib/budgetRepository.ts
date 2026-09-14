@@ -1,6 +1,6 @@
 import type { StoredData } from "@/types/expense";
 import { getMongoClient } from "@/lib/mongodb";
-import { getInitialState, parseStoredData } from "@/utils/storage";
+import { getEmptyState, parseStoredData } from "@/utils/storage";
 
 const DB_NAME = process.env.MONGODB_DB ?? "dom-budzet";
 const COLLECTION = "state";
@@ -25,16 +25,14 @@ export async function readBudget(): Promise<{
   const doc = await col.findOne({ _id: DOC_ID });
 
   if (!doc) {
-    const data = getInitialState();
+    const data = getEmptyState();
     await writeBudget(data);
     return { data, seeded: true };
   }
 
   const parsed = parseStoredData(doc);
   if (!parsed) {
-    const data = getInitialState();
-    await writeBudget(data);
-    return { data, seeded: true };
+    return { data: getEmptyState(), seeded: false };
   }
 
   return { data: parsed, seeded: false };

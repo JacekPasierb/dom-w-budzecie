@@ -15,8 +15,8 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "DOM — budżet wykończenia",
-  description: "Pracownia budżetu wykończenia domu.",
+  title: "Dom w budżecie",
+  description: "Pomaga zmieścić się w budżecie przy wykończeniu domu.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -53,9 +53,10 @@
 
 .brandText strong {
   font-family: var(--display);
-  font-size: 1.28rem;
+  font-size: 1.08rem;
   font-weight: 620;
-  letter-spacing: 0.08em;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
 }
 
 .brandText em {

@@ -154,33 +154,12 @@ export function saveState(state: StoredData): void {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
-function mergeRestoredExpenses(state: StoredData): StoredData {
-  const names = new Set(
-    state.expenses.map((expense) => expense.name.trim().toLowerCase()),
-  );
-  const hasSplitAgd = ["płyta indukcyjna", "piekarnik", "zmywarka", "okap kuchenny"].some(
-    (name) => names.has(name),
-  );
-
-  let expenses = state.expenses;
-  if (hasSplitAgd) {
-    expenses = expenses.filter(
-      (expense) => expense.name.trim().toLowerCase() !== "agd kuchenne",
-    );
-  }
-
-  const currentNames = new Set(
-    expenses.map((expense) => expense.name.trim().toLowerCase()),
-  );
-  const missing = INITIAL_EXPENSES.filter(
-    (expense) => !currentNames.has(expense.name.trim().toLowerCase()),
-  ).map((expense) => ({ ...expense }));
-
-  if (missing.length === 0 && expenses.length === state.expenses.length) {
-    return state;
-  }
-
-  return { ...state, expenses: [...missing, ...expenses] };
+export function getEmptyState(): StoredData {
+  return {
+    version: 1,
+    expenses: [],
+    settings: { ...DEFAULT_SETTINGS },
+  };
 }
 
 export function getInitialState(): StoredData {
@@ -192,26 +171,5 @@ export function getInitialState(): StoredData {
 }
 
 export function loadOrSeedState(): StoredData {
-  const existing = loadState();
-  if (existing) {
-    const merged = mergeRestoredExpenses(existing);
-    saveState(merged);
-    return merged;
-  }
-
-  const alreadyHasData =
-    typeof window !== "undefined" &&
-    window.localStorage.getItem(STORAGE_KEY);
-
-  if (alreadyHasData) {
-    return {
-      version: 1,
-      expenses: [],
-      settings: { ...DEFAULT_SETTINGS },
-    };
-  }
-
-  const seeded = getInitialState();
-  saveState(seeded);
-  return seeded;
+  return loadState() ?? getEmptyState();
 }

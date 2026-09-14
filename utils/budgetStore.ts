@@ -1,8 +1,7 @@
 import type { StoredData } from "@/types/expense";
 import {
-  getInitialState,
+  getEmptyState,
   loadOrSeedState,
-  loadState,
   parseStoredData,
   saveState,
 } from "@/utils/storage";
@@ -10,7 +9,7 @@ import {
 type Listener = () => void;
 
 const listeners = new Set<Listener>();
-const serverSnapshot = getInitialState();
+const serverSnapshot = getEmptyState();
 let cached: StoredData = serverSnapshot;
 let loaded = false;
 let storageSource: "mongo" | "local" = "local";
@@ -100,31 +99,12 @@ export async function hydrateBudgetStore(): Promise<void> {
     if (response.ok) {
       const json: unknown = await response.json();
       const parsed = parseStoredData(json);
-      const seeded =
-        typeof json === "object" &&
-        json !== null &&
-        "seeded" in json &&
-        Boolean((json as { seeded?: boolean }).seeded);
 
       if (parsed) {
-        const local = loadState();
-        if (seeded && local && local.expenses.length > 0) {
-          cached = local;
-          try {
-            await persistToMongo(local);
-            storageSource = "mongo";
-            storageError = null;
-          } catch (error) {
-            storageSource = "local";
-            storageError =
-              error instanceof Error ? error.message : "Zapis do MongoDB nie powiódł się.";
-          }
-        } else {
-          cached = parsed;
-          saveState(parsed);
-          storageSource = "mongo";
-          storageError = null;
-        }
+        cached = parsed;
+        saveState(parsed);
+        storageSource = "mongo";
+        storageError = null;
         loaded = true;
         notify();
         return;

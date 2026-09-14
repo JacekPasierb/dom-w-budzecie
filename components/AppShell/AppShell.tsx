@@ -35,7 +35,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               </svg>
             </span>
             <span className={styles.brandText}>
-              <strong>DOM</strong>
+              <strong>Dom w budżecie</strong>
               <em>wykończenie</em>
             </span>
           </Link>
