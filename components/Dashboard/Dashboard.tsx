@@ -6,7 +6,6 @@ import { BudgetProgress } from "@/components/BudgetProgress/BudgetProgress";
 import { ExpenseForm } from "@/components/ExpenseForm/ExpenseForm";
 import { Icon } from "@/components/Icon/Icon";
 import { Modal } from "@/components/Modal/Modal";
-import { GARAGE_AREA_M2, HOUSE_AREA_M2 } from "@/data/defaults";
 import { useExpenses } from "@/hooks/useExpenses";
 import type { ExpenseInput } from "@/types/expense";
 import { formatPLN } from "@/utils/currency";
@@ -39,8 +38,8 @@ export function Dashboard() {
           </p>
           <h1 className="pageTitle">Wykończenie domu, jeden rzut oka.</h1>
           <p className="pageLead">
-            Dom ~{HOUSE_AREA_M2} m², w tym garaż ~{GARAGE_AREA_M2} m². Każda zmiana
-            od razu przelicza, ile jeszcze zostaje na płytki, AGD i robociznę.
+            Śledź planowane i kupione wydatki na wykończenie. Każda zmiana od razu
+            pokazuje, ile jeszcze zostaje w budżecie i czy ruszasz rezerwę.
           </p>
           <button
             type="button"
