@@ -90,8 +90,8 @@ export function setBudgetSnapshot(next: StoredData): void {
   );
 }
 
-export async function hydrateBudgetStore(): Promise<void> {
-  if (hydrateStarted) return;
+export async function hydrateBudgetStore(force = false): Promise<void> {
+  if (hydrateStarted && !force) return;
   hydrateStarted = true;
 
   try {

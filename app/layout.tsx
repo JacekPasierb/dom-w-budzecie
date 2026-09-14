@@ -1,7 +1,10 @@
+import { plPL } from "@clerk/localizations";
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Fraunces, Geist } from "next/font/google";
 import { AppShell } from "@/components/AppShell/AppShell";
 import { ExpensesProvider } from "@/hooks/useExpenses";
+import { clerkAppearance } from "@/lib/clerkAppearance";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -23,9 +26,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="pl" className={`${geistSans.variable} ${fraunces.variable}`}>
       <body>
-        <ExpensesProvider>
-          <AppShell>{children}</AppShell>
-        </ExpensesProvider>
+        <ClerkProvider localization={plPL} appearance={clerkAppearance}>
+          <ExpensesProvider>
+            <AppShell>{children}</AppShell>
+          </ExpensesProvider>
+        </ClerkProvider>
       </body>
     </html>
   );

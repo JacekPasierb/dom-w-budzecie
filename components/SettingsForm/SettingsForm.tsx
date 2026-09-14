@@ -96,7 +96,7 @@ function SettingsFormReady() {
           <h1 className="pageTitle">Ustawienia</h1>
           <p className="pageLead">
             {storageSource === "mongo"
-              ? "Dane zapisują się w MongoDB (baza dom-budzet, kolekcja state). JSON zostaje jako dodatkowy backup."
+              ? "Dane tego konta zapisują się w MongoDB (baza dom-budzet, kolekcja state). JSON zostaje jako dodatkowy backup."
               : "MongoDB jest niedostępne — chwilowo zapis jest tylko w przeglądarce."}
           </p>
           {storageError ? <p className={styles.error}>{storageError}</p> : null}

@@ -9,6 +9,7 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
+import { useAuth } from "@clerk/nextjs";
 import type {
   AppSettings,
   Expense,
@@ -58,6 +59,7 @@ function getServerStorageSource(): "mongo" | "local" {
 }
 
 export function ExpensesProvider({ children }: { children: ReactNode }) {
+  const { isLoaded, userId } = useAuth();
   const ready = useSyncExternalStore(
     subscribeBudgetStore,
     getStoreLoaded,
@@ -80,8 +82,9 @@ export function ExpensesProvider({ children }: { children: ReactNode }) {
   );
 
   useEffect(() => {
-    void hydrateBudgetStore();
-  }, []);
+    if (!isLoaded || !userId) return;
+    void hydrateBudgetStore(true);
+  }, [isLoaded, userId]);
 
   const addExpense = useCallback((input: ExpenseInput) => {
     const current = getBudgetSnapshot();

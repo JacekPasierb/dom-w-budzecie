@@ -4,11 +4,14 @@ import { getEmptyState, parseStoredData } from "@/utils/storage";
 
 const DB_NAME = process.env.MONGODB_DB ?? "dom-budzet";
 const COLLECTION = "state";
-const DOC_ID = "main";
+const LEGACY_ID = "main";
 
 type BudgetDocument = StoredData & {
   _id: string;
   updatedAt: Date;
+  claimedBy?: string;
+  claimedAt?: Date;
+  inheritedFrom?: string;
 };
 
 function collection() {
@@ -17,31 +20,50 @@ function collection() {
   );
 }
 
-export async function readBudget(): Promise<{
+async function claimLegacyBudget(userId: string): Promise<StoredData | null> {
+  const col = await collection();
+
+  const claimed = await col.findOneAndUpdate(
+    { _id: LEGACY_ID, claimedBy: { $exists: false } },
+    { $set: { claimedBy: userId, claimedAt: new Date() } },
+    { returnDocument: "after" },
+  );
+
+  const legacy =
+    claimed ?? (await col.findOne({ _id: LEGACY_ID, claimedBy: userId }));
+  if (!legacy) return null;
+
+  return parseStoredData(legacy);
+}
+
+export async function readBudget(userId: string): Promise<{
   data: StoredData;
   seeded: boolean;
 }> {
   const col = await collection();
-  const doc = await col.findOne({ _id: DOC_ID });
+  const doc = await col.findOne({ _id: userId });
 
-  if (!doc) {
-    const data = getEmptyState();
-    await writeBudget(data);
-    return { data, seeded: true };
+  if (doc) {
+    const parsed = parseStoredData(doc);
+    return {
+      data: parsed ?? getEmptyState(),
+      seeded: false,
+    };
   }
 
-  const parsed = parseStoredData(doc);
-  if (!parsed) {
-    return { data: getEmptyState(), seeded: false };
-  }
-
-  return { data: parsed, seeded: false };
+  const inherited = await claimLegacyBudget(userId);
+  const data = inherited ?? getEmptyState();
+  await writeBudget(userId, data);
+  return { data, seeded: !inherited };
 }
 
-export async function writeBudget(data: StoredData): Promise<void> {
+export async function writeBudget(
+  userId: string,
+  data: StoredData,
+): Promise<void> {
   const col = await collection();
   await col.updateOne(
-    { _id: DOC_ID },
+    { _id: userId },
     {
       $set: {
         version: data.version,

@@ -1,3 +1,4 @@
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { readBudget, writeBudget } from "@/lib/budgetRepository";
 import { isMongoConfigured } from "@/lib/mongodb";
@@ -6,6 +7,11 @@ import { parseStoredData } from "@/utils/storage";
 export const runtime = "nodejs";
 
 export async function GET() {
+  const { isAuthenticated, userId } = await auth();
+  if (!isAuthenticated || !userId) {
+    return NextResponse.json({ error: "Wymagane logowanie." }, { status: 401 });
+  }
+
   if (!isMongoConfigured()) {
     return NextResponse.json(
       { error: "Brak MONGODB_URI. Dodaj connection string w .env.local." },
@@ -14,7 +20,7 @@ export async function GET() {
   }
 
   try {
-    const { data, seeded } = await readBudget();
+    const { data, seeded } = await readBudget(userId);
     return NextResponse.json({ ...data, seeded, source: "mongo" });
   } catch (error) {
     const message =
@@ -24,6 +30,11 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
+  const { isAuthenticated, userId } = await auth();
+  if (!isAuthenticated || !userId) {
+    return NextResponse.json({ error: "Wymagane logowanie." }, { status: 401 });
+  }
+
   if (!isMongoConfigured()) {
     return NextResponse.json(
       { error: "Brak MONGODB_URI. Dodaj connection string w .env.local." },
@@ -40,7 +51,7 @@ export async function PUT(request: Request) {
       );
     }
 
-    await writeBudget(parsed);
+    await writeBudget(userId, parsed);
     return NextResponse.json({ ...parsed, source: "mongo" });
   } catch (error) {
     const message =

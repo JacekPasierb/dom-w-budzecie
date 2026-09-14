@@ -1,5 +1,6 @@
 "use client";
 
+import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type ReactNode } from "react";
@@ -21,6 +22,8 @@ function isActive(pathname: string, href: string): boolean {
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const isAuthRoute =
+    pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up");
 
   return (
     <div className={styles.shell}>
@@ -39,41 +42,65 @@ export function AppShell({ children }: { children: ReactNode }) {
               <em>wykończenie</em>
             </span>
           </Link>
-          <nav className={styles.desktopNav} aria-label="Główne">
-            {NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={
-                  isActive(pathname, item.href)
-                    ? `${styles.navLink} ${styles.navLinkActive}`
-                    : styles.navLink
-                }
-              >
-                <Icon name={item.icon} size={16} />
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+          {isAuthRoute ? (
+            <div className={styles.auth}>
+              <Show when="signed-out">
+                <SignInButton>
+                  <button type="button" className="btn btnSmall">
+                    Zaloguj się
+                  </button>
+                </SignInButton>
+                <SignUpButton>
+                  <button type="button" className="btn btnPrimary btnSmall">
+                    Załóż konto
+                  </button>
+                </SignUpButton>
+              </Show>
+            </div>
+          ) : (
+            <>
+              <nav className={styles.desktopNav} aria-label="Główne">
+                {NAV.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={
+                      isActive(pathname, item.href)
+                        ? `${styles.navLink} ${styles.navLinkActive}`
+                        : styles.navLink
+                    }
+                  >
+                    <Icon name={item.icon} size={16} />
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
+              <div className={styles.auth}>
+                <UserButton afterSignOutUrl="/sign-in" />
+              </div>
+            </>
+          )}
         </div>
       </header>
-      <main className="appMain">{children}</main>
-      <nav className={styles.mobileNav} aria-label="Główne">
-        {NAV.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={
-              isActive(pathname, item.href)
-                ? `${styles.mobileLink} ${styles.mobileLinkActive}`
-                : styles.mobileLink
-            }
-          >
-            <Icon name={item.icon} size={20} />
-            {item.short}
-          </Link>
-        ))}
-      </nav>
+      <main className={isAuthRoute ? styles.authMain : "appMain"}>{children}</main>
+      {isAuthRoute ? null : (
+        <nav className={styles.mobileNav} aria-label="Główne">
+          {NAV.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={
+                isActive(pathname, item.href)
+                  ? `${styles.mobileLink} ${styles.mobileLinkActive}`
+                  : styles.mobileLink
+              }
+            >
+              <Icon name={item.icon} size={20} />
+              {item.short}
+            </Link>
+          ))}
+        </nav>
+      )}
     </div>
   );
 }
