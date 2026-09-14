@@ -76,7 +76,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 ))}
               </nav>
               <div className={styles.auth}>
-                <UserButton afterSignOutUrl="/sign-in" />
+                <UserButton />
               </div>
             </>
           )}
