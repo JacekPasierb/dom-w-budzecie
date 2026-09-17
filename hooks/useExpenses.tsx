@@ -15,6 +15,7 @@ import type {
   Expense,
   ExpenseInput,
   ExpenseStatus,
+  RoomDefinition,
   StoredData,
 } from "@/types/expense";
 import { calculateBudget, type BudgetSummary } from "@/utils/budget";
@@ -31,18 +32,22 @@ import {
   subscribeBudgetStore,
 } from "@/utils/budgetStore";
 import { getInitialState } from "@/utils/storage";
+import { fallbackRoomId, uniqueRoomId } from "@/utils/rooms";
 
 type ExpensesContextValue = {
   ready: boolean;
   storageSource: "mongo" | "local";
   storageError: string | null;
   expenses: Expense[];
+  rooms: RoomDefinition[];
   settings: AppSettings;
   summary: BudgetSummary;
   addExpense: (input: ExpenseInput) => void;
   updateExpense: (id: string, input: ExpenseInput) => void;
   deleteExpense: (id: string) => void;
   setStatus: (id: string, status: ExpenseStatus) => void;
+  addRoom: (name: string) => string | null;
+  deleteRoom: (id: string) => boolean;
   updateSettings: (next: AppSettings) => void;
   resetData: () => void;
   importData: (data: StoredData) => void;
@@ -122,6 +127,39 @@ export function ExpensesProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const addRoom = useCallback((name: string) => {
+    const trimmed = name.trim();
+    if (!trimmed) return null;
+
+    const current = getBudgetSnapshot();
+    const duplicate = current.rooms.some(
+      (room) => room.name.trim().toLowerCase() === trimmed.toLowerCase(),
+    );
+    if (duplicate) return null;
+
+    const id = uniqueRoomId(trimmed, current.rooms);
+    setBudgetSnapshot({
+      ...current,
+      rooms: [...current.rooms, { id, name: trimmed }],
+    });
+    return id;
+  }, []);
+
+  const deleteRoom = useCallback((id: string) => {
+    const current = getBudgetSnapshot();
+    const fallback = fallbackRoomId(current.rooms, id);
+    if (!fallback) return false;
+
+    setBudgetSnapshot({
+      ...current,
+      rooms: current.rooms.filter((room) => room.id !== id),
+      expenses: current.expenses.map((expense) =>
+        expense.room === id ? { ...expense, room: fallback } : expense,
+      ),
+    });
+    return true;
+  }, []);
+
   const updateSettings = useCallback((next: AppSettings) => {
     const current = getBudgetSnapshot();
     setBudgetSnapshot({
@@ -149,12 +187,15 @@ export function ExpensesProvider({ children }: { children: ReactNode }) {
       storageSource,
       storageError,
       expenses: state.expenses,
+      rooms: state.rooms,
       settings: state.settings,
       summary,
       addExpense,
       updateExpense,
       deleteExpense,
       setStatus,
+      addRoom,
+      deleteRoom,
       updateSettings,
       resetData,
       importData,
@@ -164,12 +205,15 @@ export function ExpensesProvider({ children }: { children: ReactNode }) {
       storageSource,
       storageError,
       state.expenses,
+      state.rooms,
       state.settings,
       summary,
       addExpense,
       updateExpense,
       deleteExpense,
       setStatus,
+      addRoom,
+      deleteRoom,
       updateSettings,
       resetData,
       importData,

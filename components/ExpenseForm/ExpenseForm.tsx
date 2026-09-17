@@ -4,7 +4,6 @@ import { useState, type FormEvent } from "react";
 import {
   CERTAINTY_LABELS,
   PRIORITY_LABELS,
-  ROOM_LABELS,
   STATUS_LABELS,
   TYPE_LABELS,
 } from "@/data/labels";
@@ -22,9 +21,9 @@ import {
   EXPENSE_STATUSES,
   EXPENSE_TYPES,
   PRICE_CERTAINTIES,
-  ROOMS,
 } from "@/types/expense";
 import { Icon } from "@/components/Icon/Icon";
+import { useExpenses } from "@/hooks/useExpenses";
 import { parseAmount } from "@/utils/currency";
 import styles from "./ExpenseForm.module.css";
 
@@ -48,10 +47,14 @@ type FormState = {
   priceCertainty: PriceCertainty;
 };
 
-function toFormState(expense?: Expense | null, defaultRoom?: Room): FormState {
+function toFormState(
+  expense: Expense | null | undefined,
+  defaultRoom: Room | undefined,
+  fallbackRoom: Room,
+): FormState {
   return {
     name: expense?.name ?? "",
-    room: expense?.room ?? defaultRoom ?? "kuchnia",
+    room: expense?.room ?? defaultRoom ?? fallbackRoom,
     plannedPrice: expense ? String(expense.plannedPrice) : "",
     actualPrice:
       expense?.actualPrice === null || expense?.actualPrice === undefined
@@ -72,8 +75,15 @@ export function ExpenseForm({
   onSubmit,
   onCancel,
 }: ExpenseFormProps) {
-  const [form, setForm] = useState<FormState>(() => toFormState(initial, defaultRoom));
+  const { rooms } = useExpenses();
+  const fallbackRoom = rooms[0]?.id ?? "inne";
+  const [form, setForm] = useState<FormState>(() =>
+    toFormState(initial, defaultRoom, fallbackRoom),
+  );
   const [error, setError] = useState("");
+  const selectedRoom = rooms.some((item) => item.id === form.room)
+    ? form.room
+    : fallbackRoom;
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -107,9 +117,18 @@ export function ExpenseForm({
       return;
     }
 
+    const room = rooms.some((item) => item.id === form.room)
+      ? form.room
+      : fallbackRoom;
+
+    if (!room || !rooms.some((item) => item.id === room)) {
+      setError("Dodaj najpierw pomieszczenie.");
+      return;
+    }
+
     onSubmit({
       name,
-      room: form.room,
+      room,
       plannedPrice,
       actualPrice,
       quantity,
@@ -141,12 +160,12 @@ export function ExpenseForm({
           <span>Pomieszczenie</span>
           <select
             className="select"
-            value={form.room}
+            value={selectedRoom}
             onChange={(event) => update("room", event.target.value as Room)}
           >
-            {ROOMS.map((room) => (
-              <option key={room} value={room}>
-                {ROOM_LABELS[room]}
+            {rooms.map((room) => (
+              <option key={room.id} value={room.id}>
+                {room.name}
               </option>
             ))}
           </select>

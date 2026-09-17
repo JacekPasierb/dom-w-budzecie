@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { Icon } from "@/components/Icon/Icon";
-import { ROOM_LABELS } from "@/data/labels";
-import { ROOM_ICONS, ROOM_TONES } from "@/data/roomIcons";
+import { getRoomIcon, getRoomTone } from "@/utils/rooms";
 import type { RoomSummary } from "@/utils/budget";
 import { formatPLN } from "@/utils/currency";
 import styles from "./RoomCard.module.css";
@@ -20,50 +19,61 @@ function formatExpenseCount(count: number): string {
 
 type RoomCardProps = {
   summary: RoomSummary;
+  label: string;
+  onDelete?: () => void;
 };
 
-export function RoomCard({ summary }: RoomCardProps) {
-  const tone = ROOM_TONES[summary.room];
+export function RoomCard({ summary, label, onDelete }: RoomCardProps) {
+  const tone = getRoomTone(summary.room);
   const used =
     summary.predicted > 0
       ? Math.min(100, Math.round((summary.spent / summary.predicted) * 100))
       : 0;
 
   return (
-    <Link
-      href={`/rooms/${summary.room}`}
-      className={`${styles.card} ${styles[tone]}`}
-    >
-      <div className={styles.head}>
-        <span className={styles.icon} aria-hidden="true">
-          <Icon name={ROOM_ICONS[summary.room]} size={20} />
-        </span>
-        <h2>{ROOM_LABELS[summary.room]}</h2>
-      </div>
-      <dl>
-        <div>
-          <dt>Plan</dt>
-          <dd>{formatPLN(summary.predicted)}</dd>
+    <div className={`${styles.card} ${styles[tone]}`}>
+      <Link href={`/rooms/${encodeURIComponent(summary.room)}`} className={styles.link}>
+        <div className={styles.head}>
+          <span className={styles.icon} aria-hidden="true">
+            <Icon name={getRoomIcon(summary.room)} size={20} />
+          </span>
+          <h2>{label}</h2>
         </div>
-        <div>
-          <dt>Wydane</dt>
-          <dd>{formatPLN(summary.spent)}</dd>
+        <dl>
+          <div>
+            <dt>Plan</dt>
+            <dd>{formatPLN(summary.predicted)}</dd>
+          </div>
+          <div>
+            <dt>Wydane</dt>
+            <dd>{formatPLN(summary.spent)}</dd>
+          </div>
+          <div>
+            <dt>Zostaje</dt>
+            <dd>{formatPLN(summary.remaining)}</dd>
+          </div>
+        </dl>
+        <div className={styles.bar} aria-hidden="true">
+          <span style={{ width: `${used}%` }} />
         </div>
-        <div>
-          <dt>Zostaje</dt>
-          <dd>{formatPLN(summary.remaining)}</dd>
-        </div>
-      </dl>
-      <div className={styles.bar} aria-hidden="true">
-        <span style={{ width: `${used}%` }} />
-      </div>
-      <p className={styles.meta}>
-        {formatExpenseCount(summary.expenseCount)}
-        {" · "}
-        must: {summary.requiredCount}
-        {" · "}
-        opcje: {summary.optionalCount}
-      </p>
-    </Link>
+        <p className={styles.meta}>
+          {formatExpenseCount(summary.expenseCount)}
+          {" · "}
+          must: {summary.requiredCount}
+          {" · "}
+          opcje: {summary.optionalCount}
+        </p>
+      </Link>
+      {onDelete ? (
+        <button
+          type="button"
+          className={styles.delete}
+          onClick={onDelete}
+          aria-label={`Usuń strefę ${label}`}
+        >
+          <Icon name="trash" size={16} />
+        </button>
+      ) : null}
+    </div>
   );
 }

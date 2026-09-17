@@ -3,13 +3,14 @@
 import { Icon } from "@/components/Icon/Icon";
 import {
   PRIORITY_LABELS,
-  ROOM_LABELS,
   STATUS_LABELS,
   TYPE_LABELS,
 } from "@/data/labels";
+import { useExpenses } from "@/hooks/useExpenses";
 import type { Expense } from "@/types/expense";
 import { getLineCost } from "@/utils/budget";
 import { formatPLN } from "@/utils/currency";
+import { getRoomLabel } from "@/utils/rooms";
 import styles from "./ExpenseTable.module.css";
 
 type ExpenseTableProps = {
@@ -35,6 +36,8 @@ export function ExpenseTable({
   onMarkPaid,
   onMarkPlanned,
 }: ExpenseTableProps) {
+  const { rooms } = useExpenses();
+
   if (expenses.length === 0) {
     return <p className={styles.empty}>{emptyText}</p>;
   }
@@ -46,7 +49,7 @@ export function ExpenseTable({
           <div className={styles.info}>
             <h3>{expense.name}</h3>
             <p>
-              {hideRoom ? null : `${ROOM_LABELS[expense.room]} · `}
+              {hideRoom ? null : `${getRoomLabel(expense.room, rooms)} · `}
               {TYPE_LABELS[expense.type]}
               {expense.quantity > 1 ? ` · ×${expense.quantity}` : ""}
             </p>

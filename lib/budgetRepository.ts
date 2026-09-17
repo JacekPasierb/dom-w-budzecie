@@ -69,6 +69,7 @@ export async function writeBudget(
         version: data.version,
         expenses: data.expenses,
         settings: data.settings,
+        rooms: data.rooms,
         updatedAt: new Date(),
       },
     },

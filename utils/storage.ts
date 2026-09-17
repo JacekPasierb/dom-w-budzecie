@@ -7,7 +7,6 @@ import type {
   ExpenseStatus,
   ExpenseType,
   PriceCertainty,
-  Room,
   StoredData,
 } from "@/types/expense";
 import {
@@ -15,13 +14,13 @@ import {
   EXPENSE_STATUSES,
   EXPENSE_TYPES,
   PRICE_CERTAINTIES,
-  ROOMS,
 } from "@/types/expense";
+import { cloneDefaultRooms, normalizeRooms } from "@/utils/rooms";
 
 export const STORAGE_KEY = "dom-budzet-v1";
 
-function isRoom(value: unknown): value is Room {
-  return typeof value === "string" && (ROOMS as readonly string[]).includes(value);
+function isRoomId(value: unknown): value is string {
+  return typeof value === "string" && value.trim() !== "";
 }
 
 function isStatus(value: unknown): value is ExpenseStatus {
@@ -65,7 +64,7 @@ function normalizeExpense(value: unknown): Expense | null {
   if (!value || typeof value !== "object") return null;
   const item = value as Record<string, unknown>;
   if (typeof item.id !== "string" || typeof item.name !== "string") return null;
-  if (!isRoom(item.room)) return null;
+  if (!isRoomId(item.room)) return null;
 
   const plannedPrice = toAmount(item.plannedPrice);
   if (plannedPrice === null) return null;
@@ -88,7 +87,7 @@ function normalizeExpense(value: unknown): Expense | null {
   return {
     id: item.id,
     name: item.name,
-    room: item.room,
+    room: item.room.trim(),
     plannedPrice,
     actualPrice,
     quantity: quantity >= 1 ? Math.round(quantity) : 1,
@@ -131,6 +130,7 @@ export function parseStoredData(value: unknown): StoredData | null {
     version: 1,
     expenses,
     settings: normalizeSettings(data.settings),
+    rooms: normalizeRooms(data.rooms, expenses),
   };
 }
 
@@ -159,6 +159,7 @@ export function getEmptyState(): StoredData {
     version: 1,
     expenses: [],
     settings: { ...DEFAULT_SETTINGS },
+    rooms: cloneDefaultRooms(),
   };
 }
 
@@ -167,6 +168,7 @@ export function getInitialState(): StoredData {
     version: 1,
     expenses: INITIAL_EXPENSES.map((expense) => ({ ...expense })),
     settings: { ...DEFAULT_SETTINGS },
+    rooms: cloneDefaultRooms(),
   };
 }
 

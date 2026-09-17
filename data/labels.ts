@@ -3,10 +3,9 @@ import type {
   ExpenseStatus,
   ExpenseType,
   PriceCertainty,
-  Room,
 } from "@/types/expense";
 
-export const ROOM_LABELS: Record<Room, string> = {
+export const ROOM_LABELS: Record<string, string> = {
   kuchnia: "Kuchnia",
   salon: "Salon",
   wiatrolap: "Wiatrołap",

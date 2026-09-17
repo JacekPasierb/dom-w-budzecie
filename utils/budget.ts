@@ -4,8 +4,8 @@ import type {
   ExpensePriority,
   ExpenseStatus,
   Room,
+  RoomDefinition,
 } from "@/types/expense";
-import { ROOMS } from "@/types/expense";
 
 export type ProgressState = "safe" | "near" | "over";
 
@@ -138,6 +138,9 @@ export function getRoomSummary(
   };
 }
 
-export function getAllRoomSummaries(expenses: Expense[]): RoomSummary[] {
-  return ROOMS.map((room) => getRoomSummary(expenses, room));
+export function getAllRoomSummaries(
+  expenses: Expense[],
+  rooms: RoomDefinition[],
+): RoomSummary[] {
+  return rooms.map((room) => getRoomSummary(expenses, room.id));
 }

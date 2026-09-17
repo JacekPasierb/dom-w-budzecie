@@ -1,13 +1,10 @@
-import { notFound } from "next/navigation";
 import { RoomDetail } from "@/components/RoomDetail/RoomDetail";
-import { ROOMS, type Room } from "@/types/expense";
+import { DEFAULT_ROOMS } from "@/data/defaultRooms";
 
-function isRoom(value: string): value is Room {
-  return (ROOMS as readonly string[]).includes(value);
-}
+export const dynamicParams = true;
 
 export function generateStaticParams() {
-  return ROOMS.map((room) => ({ room }));
+  return DEFAULT_ROOMS.map((room) => ({ room: room.id }));
 }
 
 export default async function RoomPage({
@@ -16,6 +13,5 @@ export default async function RoomPage({
   params: Promise<{ room: string }>;
 }) {
   const { room } = await params;
-  if (!isRoom(room)) notFound();
-  return <RoomDetail room={room} />;
+  return <RoomDetail room={decodeURIComponent(room)} />;
 }

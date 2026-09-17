@@ -1,23 +1,9 @@
-export const ROOMS = [
-  "kuchnia",
-  "salon",
-  "wiatrolap",
-  "wc-dol",
-  "lazienka-gora",
-  "schody",
-  "korytarz",
-  "sypialnia",
-  "pokoj-chlopca-1",
-  "pokoj-chlopca-2",
-  "garderoba",
-  "garaz",
-  "podlogi",
-  "malowanie",
-  "elektryka",
-  "inne",
-] as const;
+export type RoomDefinition = {
+  id: string;
+  name: string;
+};
 
-export type Room = (typeof ROOMS)[number];
+export type Room = string;
 
 export const EXPENSE_STATUSES = [
   "planowane",
@@ -82,4 +68,5 @@ export type StoredData = {
   version: 1;
   expenses: Expense[];
   settings: AppSettings;
+  rooms: RoomDefinition[];
 };

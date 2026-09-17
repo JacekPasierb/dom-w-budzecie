@@ -2,13 +2,14 @@
 
 import {
   PRIORITY_LABELS,
-  ROOM_LABELS,
   STATUS_LABELS,
   TYPE_LABELS,
 } from "@/data/labels";
+import { useExpenses } from "@/hooks/useExpenses";
 import type { Expense } from "@/types/expense";
 import { getLineCost } from "@/utils/budget";
 import { formatPLN } from "@/utils/currency";
+import { getRoomLabel } from "@/utils/rooms";
 import styles from "./ExpenseItem.module.css";
 
 const PRIORITY_CLASS: Record<Expense["priority"], string> = {
@@ -44,6 +45,7 @@ export function ExpenseItem({
   onMarkBought,
   onMarkPaid,
 }: ExpenseItemProps) {
+  const { rooms } = useExpenses();
   const lineCost = getLineCost(expense);
   const showQuantity = expense.quantity > 1;
 
@@ -53,7 +55,7 @@ export function ExpenseItem({
         <div>
           <h3 className={styles.name}>{expense.name}</h3>
           <p className={styles.meta}>
-            {hideRoom ? null : `${ROOM_LABELS[expense.room]} · `}
+            {hideRoom ? null : `${getRoomLabel(expense.room, rooms)} · `}
             {TYPE_LABELS[expense.type]}
             {showQuantity ? ` · ×${expense.quantity}` : ""}
           </p>

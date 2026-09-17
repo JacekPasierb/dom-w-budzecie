@@ -1,12 +1,12 @@
 import {
   CERTAINTY_LABELS,
   PRIORITY_LABELS,
-  ROOM_LABELS,
   STATUS_LABELS,
   TYPE_LABELS,
 } from "@/data/labels";
-import type { Expense, StoredData } from "@/types/expense";
+import type { Expense, RoomDefinition, StoredData } from "@/types/expense";
 import { getLineCost } from "@/utils/budget";
+import { getRoomLabel } from "@/utils/rooms";
 
 function csvCell(value: string | number): string {
   const text = String(value);
@@ -16,7 +16,10 @@ function csvCell(value: string | number): string {
   return text;
 }
 
-export function expensesToCsv(expenses: Expense[]): string {
+export function expensesToCsv(
+  expenses: Expense[],
+  rooms: RoomDefinition[],
+): string {
   const header = [
     "Nazwa",
     "Pomieszczenie",
@@ -33,7 +36,7 @@ export function expensesToCsv(expenses: Expense[]): string {
 
   const rows = expenses.map((expense) => [
     csvCell(expense.name),
-    csvCell(ROOM_LABELS[expense.room]),
+    csvCell(getRoomLabel(expense.room, rooms)),
     csvCell(PRIORITY_LABELS[expense.priority]),
     csvCell(expense.plannedPrice),
     csvCell(expense.actualPrice ?? ""),
@@ -77,9 +80,12 @@ export function downloadJsonBackup(data: StoredData): void {
   );
 }
 
-export function downloadCsv(expenses: Expense[]): void {
+export function downloadCsv(
+  expenses: Expense[],
+  rooms: RoomDefinition[],
+): void {
   downloadTextFile(
-    expensesToCsv(expenses),
+    expensesToCsv(expenses, rooms),
     `wydatki-domu-${new Date().toISOString().slice(0, 10)}.csv`,
     "text/csv;charset=utf-8",
   );

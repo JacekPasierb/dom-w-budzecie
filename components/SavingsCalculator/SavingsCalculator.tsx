@@ -1,14 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { PRIORITY_LABELS, ROOM_LABELS } from "@/data/labels";
+import { PRIORITY_LABELS } from "@/data/labels";
 import { useExpenses } from "@/hooks/useExpenses";
 import { getLineCost, getOptionalOpenExpenses, sumCosts } from "@/utils/budget";
 import { formatPLN } from "@/utils/currency";
+import { getRoomLabel } from "@/utils/rooms";
 import styles from "./SavingsCalculator.module.css";
 
 export function SavingsCalculator() {
-  const { expenses, summary } = useExpenses();
+  const { expenses, rooms, summary } = useExpenses();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const optional = useMemo(() => getOptionalOpenExpenses(expenses), [expenses]);
@@ -58,7 +59,7 @@ export function SavingsCalculator() {
                   <span className={styles.body}>
                     <strong>{expense.name}</strong>
                     <span>
-                      {ROOM_LABELS[expense.room]} · {PRIORITY_LABELS[expense.priority]}
+                      {getRoomLabel(expense.room, rooms)} · {PRIORITY_LABELS[expense.priority]}
                     </span>
                   </span>
                   <span className={styles.amount}>{formatPLN(getLineCost(expense))}</span>

@@ -1,7 +1,6 @@
 import type { IconName } from "@/components/Icon/Icon";
-import type { Room } from "@/types/expense";
 
-export const ROOM_ICONS: Record<Room, IconName> = {
+export const ROOM_ICONS: Record<string, IconName> = {
   kuchnia: "kitchen",
   salon: "sofa",
   wiatrolap: "door",
@@ -20,7 +19,7 @@ export const ROOM_ICONS: Record<Room, IconName> = {
   inne: "box",
 };
 
-export const ROOM_TONES: Record<Room, "clay" | "moss" | "brass" | "ink"> = {
+export const ROOM_TONES: Record<string, "clay" | "moss" | "brass" | "ink"> = {
   kuchnia: "clay",
   salon: "moss",
   wiatrolap: "ink",

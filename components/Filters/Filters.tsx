@@ -1,9 +1,9 @@
 "use client";
 
 import { Icon } from "@/components/Icon/Icon";
+import { useExpenses } from "@/hooks/useExpenses";
 import {
   PRIORITY_LABELS,
-  ROOM_LABELS,
   STATUS_LABELS,
   TYPE_LABELS,
 } from "@/data/labels";
@@ -12,7 +12,6 @@ import {
   EXPENSE_PRIORITIES,
   EXPENSE_STATUSES,
   EXPENSE_TYPES,
-  ROOMS,
 } from "@/types/expense";
 import styles from "./Filters.module.css";
 
@@ -23,6 +22,8 @@ type FiltersProps = {
 };
 
 export function Filters({ value, onChange, hideRoom = false }: FiltersProps) {
+  const { rooms } = useExpenses();
+
   function patch(partial: Partial<ExpenseFiltersState>) {
     onChange({ ...value, ...partial });
   }
@@ -53,9 +54,9 @@ export function Filters({ value, onChange, hideRoom = false }: FiltersProps) {
             }
           >
             <option value="all">Wszystkie</option>
-            {ROOMS.map((room) => (
-              <option key={room} value={room}>
-                {ROOM_LABELS[room]}
+            {rooms.map((room) => (
+              <option key={room.id} value={room.id}>
+                {room.name}
               </option>
             ))}
           </select>

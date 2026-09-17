@@ -23,6 +23,7 @@ function SettingsFormReady() {
   const {
     settings,
     expenses,
+    rooms,
     storageSource,
     storageError,
     updateSettings,
@@ -146,13 +147,13 @@ function SettingsFormReady() {
             type="button"
             className="btn"
             onClick={() =>
-              downloadJsonBackup({ version: 1, expenses, settings })
+              downloadJsonBackup({ version: 1, expenses, settings, rooms })
             }
           >
             <Icon name="download" size={16} />
             Eksportuj JSON
           </button>
-          <button type="button" className="btn" onClick={() => downloadCsv(expenses)}>
+          <button type="button" className="btn" onClick={() => downloadCsv(expenses, rooms)}>
             <Icon name="list" size={16} />
             Eksportuj CSV
           </button>

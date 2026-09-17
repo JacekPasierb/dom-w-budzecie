@@ -16,6 +16,7 @@
 
 .titleRow {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 14px;
   margin-bottom: 20px;
@@ -23,6 +24,10 @@
 
 .titleRow .pageTitle {
   margin-bottom: 0;
+}
+
+.titleRow .btn {
+  margin-left: auto;
 }
 
 .mark {
