@@ -11,10 +11,15 @@
 }
 
 .actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
   display: flex;
   justify-content: flex-end;
   gap: 8px;
   margin-top: 4px;
+  padding-top: 12px;
+  background: linear-gradient(180deg, transparent, var(--surface) 28%);
 }
 
 .error {
